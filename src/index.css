@@ -1,0 +1,334 @@
+/* Professional Trading Terminal Styles */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply m-0 bg-bg-primary text-text-primary antialiased;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Monospace for all data/numbers */
+  .font-data {
+    font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Custom scrollbar - minimal, professional */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #12121a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a3a;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a4a;
+  }
+}
+
+@layer components {
+  /* ============================================
+     PROFESSIONAL CARD STYLES
+     ============================================ */
+  .card {
+    @apply bg-bg-card border border-border-default rounded-lg;
+  }
+
+  .card-elevated {
+    @apply bg-bg-elevated border border-border-default rounded-lg shadow-md;
+  }
+
+  .card-header {
+    @apply px-4 py-3 border-b border-border-subtle;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  /* ============================================
+     TABLE STYLES
+     ============================================ */
+  .data-table {
+    @apply w-full text-sm border-collapse;
+  }
+
+  .data-table thead {
+    @apply bg-bg-secondary border-b border-border-default;
+  }
+
+  .data-table th {
+    @apply px-3 py-2 text-left text-xxs font-semibold text-text-muted uppercase tracking-wider;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .data-table td {
+    @apply px-3 py-2 border-b border-border-subtle;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .data-table tbody tr {
+    @apply hover:bg-bg-elevated transition-colors duration-100;
+  }
+
+  /* ============================================
+     BUTTON STYLES
+     ============================================ */
+  .btn {
+    @apply px-4 py-2 text-sm font-medium rounded transition-all duration-150;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-bg-primary hover:bg-accent-muted;
+  }
+
+  .btn-secondary {
+    @apply btn bg-bg-elevated text-text-primary border border-border-default hover:border-border-hover hover:bg-bg-card;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-text-secondary hover:bg-bg-elevated hover:text-text-primary;
+  }
+
+  .btn-bull {
+    @apply btn bg-bull/20 text-bull border border-bull/30 hover:bg-bull/30;
+  }
+
+  .btn-bear {
+    @apply btn bg-bear/20 text-bear border border-bear/30 hover:bg-bear/30;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .btn-xs {
+    @apply px-2 py-1 text-xxs;
+  }
+
+  /* ============================================
+     STATUS INDICATORS
+     ============================================ */
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+
+  .status-active {
+    @apply status-dot bg-accent;
+  }
+
+  .status-inactive {
+    @apply status-dot bg-text-muted;
+  }
+
+  .status-warning {
+    @apply status-dot bg-neutral;
+  }
+
+  .status-error {
+    @apply status-dot bg-bear;
+  }
+
+  /* ============================================
+     DATA DISPLAY
+     ============================================ */
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .stat-label {
+    @apply text-xxs font-medium text-text-muted uppercase tracking-wide;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .stat-card {
+    @apply bg-bg-card border border-border-default rounded-lg p-4;
+  }
+
+  /* ============================================
+     FORM ELEMENTS
+     ============================================ */
+  .input {
+    @apply w-full px-3 py-2 bg-bg-secondary border border-border-default rounded text-text-primary text-sm;
+    @apply focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30;
+    @apply placeholder:text-text-disabled;
+  }
+
+  .select {
+    @apply input appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23606070' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+    padding-right: 2.5rem;
+  }
+
+  /* ============================================
+     TABS & NAVIGATION
+     ============================================ */
+  .tab {
+    @apply px-4 py-2 text-sm font-medium text-text-secondary transition-colors duration-150;
+    @apply hover:text-text-primary;
+  }
+
+  .tab-active {
+    @apply tab text-accent border-b-2 border-accent;
+  }
+
+  .nav-item {
+    @apply px-3 py-2 text-sm text-text-secondary rounded transition-colors duration-150;
+    @apply hover:bg-bg-elevated hover:text-text-primary;
+  }
+
+  .nav-item-active {
+    @apply nav-item bg-accent/10 text-accent;
+  }
+}
+
+@layer utilities {
+  /* ============================================
+     TEXT UTILITIES
+     ============================================ */
+  .text-positive {
+    color: #00ff88;
+  }
+
+  .text-negative {
+    color: #ff4757;
+  }
+
+  /* ============================================
+     TABULAR NUMBERS
+     ============================================ */
+  .tabular-nums {
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .font-mono-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* ============================================
+     SCROLLBAR UTILITIES
+     ============================================ */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-bg-secondary;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-border-default rounded;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ============================================
+     FOCUS STATES
+     ============================================ */
+  .focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.3);
+  }
+
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.5);
+  }
+
+  /* ============================================
+     HOVER EFFECTS
+     ============================================ */
+  .hover-highlight {
+    @apply transition-colors duration-150;
+  }
+
+  .hover-highlight:hover {
+    @apply bg-bg-elevated;
+  }
+
+  /* ============================================
+     GRID UTILITIES
+     ============================================ */
+  .gap-grid-sm { gap: 4px; }
+  .gap-grid { gap: 8px; }
+  .gap-grid-md { gap: 12px; }
+  .gap-grid-lg { gap: 16px; }
+
+  /* ============================================
+     DIVIDERS
+     ============================================ */
+  .divider {
+    @apply border-t border-border-subtle;
+  }
+
+  .divider-vertical {
+    @apply border-l border-border-subtle h-full;
+  }
+}
+
+/* ============================================
+   MINIMAL ANIMATIONS (Professional Only)
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-indicator {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.2s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+/* Live indicator */
+.live-indicator {
+  @apply inline-flex items-center gap-1.5 text-xs font-medium text-accent;
+}
+
+.live-indicator::before {
+  content: '';
+  @apply w-2 h-2 rounded-full bg-accent;
+  animation: pulse-indicator 1.5s ease-in-out infinite;
+}

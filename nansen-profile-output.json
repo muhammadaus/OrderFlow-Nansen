@@ -1,0 +1,250 @@
+{
+  "account": {
+    "plan": "Pro",
+    "credits_remaining": 9850,
+    "credits_total": 10000,
+    "api_key_label": "...demo",
+    "calls_today": 150
+  },
+  "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "balances": [
+    {
+      "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      "chain": "ethereum",
+      "total_value_usd": 342817.42,
+      "tokens": [
+        {
+          "symbol": "ETH",
+          "amount": 120.5,
+          "value_usd": 301251,
+          "percentage": 87.9
+        },
+        {
+          "symbol": "USDC",
+          "amount": 28500,
+          "value_usd": 28500,
+          "percentage": 8.3
+        },
+        {
+          "symbol": "WBTC",
+          "amount": 0.145,
+          "value_usd": 13066.42,
+          "percentage": 3.8
+        }
+      ]
+    },
+    {
+      "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      "chain": "base",
+      "total_value_usd": 14200,
+      "tokens": [
+        {
+          "symbol": "ETH",
+          "amount": 4.8,
+          "value_usd": 12004.8,
+          "percentage": 84.5
+        },
+        {
+          "symbol": "USDC",
+          "amount": 2195.2,
+          "value_usd": 2195.2,
+          "percentage": 15.5
+        }
+      ]
+    }
+  ],
+  "pnl": {
+    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "realized_pnl_usd": 128450.3,
+    "unrealized_pnl_usd": 84210.55,
+    "total_pnl_usd": 212660.85,
+    "win_rate": 0.73,
+    "avg_hold_days": 18.4,
+    "best_trade_usd": 52300,
+    "worst_trade_usd": -8200,
+    "total_trades": 147
+  },
+  "tokenActivity": {
+    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "top_tokens": [
+      {
+        "symbol": "ETH",
+        "chain": "ethereum",
+        "sentiment": "accumulating",
+        "last_tx_days_ago": 2
+      },
+      {
+        "symbol": "OP",
+        "chain": "optimism",
+        "sentiment": "holding",
+        "last_tx_days_ago": 8
+      },
+      {
+        "symbol": "ARB",
+        "chain": "arbitrum",
+        "sentiment": "distributing",
+        "last_tx_days_ago": 1
+      }
+    ]
+  },
+  "smartMoneyFlows": [
+    {
+      "chain": "ethereum",
+      "timeframe": "24h",
+      "net_flow_usd": 284500000,
+      "inflow_usd": 1842000000,
+      "outflow_usd": 1557500000,
+      "top_inflows": [
+        {
+          "token": "ETH",
+          "amount_usd": 142000000,
+          "wallets": 1284
+        },
+        {
+          "token": "USDC",
+          "amount_usd": 89000000,
+          "wallets": 842
+        }
+      ],
+      "top_outflows": [
+        {
+          "token": "SHIB",
+          "amount_usd": 23000000,
+          "wallets": 2103
+        },
+        {
+          "token": "PEPE",
+          "amount_usd": 18000000,
+          "wallets": 1847
+        }
+      ]
+    },
+    {
+      "chain": "base",
+      "timeframe": "24h",
+      "net_flow_usd": 52300000,
+      "inflow_usd": 312000000,
+      "outflow_usd": 259700000,
+      "top_inflows": [
+        {
+          "token": "ETH",
+          "amount_usd": 48000000,
+          "wallets": 392
+        },
+        {
+          "token": "USDC",
+          "amount_usd": 4300000,
+          "wallets": 218
+        }
+      ]
+    },
+    {
+      "chain": "arbitrum",
+      "timeframe": "24h",
+      "net_flow_usd": -18200000,
+      "inflow_usd": 284000000,
+      "outflow_usd": 302200000,
+      "top_inflows": [
+        {
+          "token": "ARB",
+          "amount_usd": 28000000,
+          "wallets": 503
+        }
+      ]
+    },
+    {
+      "chain": "polygon",
+      "timeframe": "24h",
+      "net_flow_usd": -5100000,
+      "inflow_usd": 84000000,
+      "outflow_usd": 89100000
+    },
+    {
+      "chain": "optimism",
+      "timeframe": "24h",
+      "net_flow_usd": 12800000,
+      "inflow_usd": 124000000,
+      "outflow_usd": 111200000
+    }
+  ],
+  "screener": {
+    "ethereum": {
+      "chain": "ethereum",
+      "timeframe": "24h",
+      "tokens": [
+        {
+          "symbol": "EIGEN",
+          "smart_money_inflow_usd": 8200000,
+          "price_change_24h": 0.142,
+          "smart_wallets": 284,
+          "signal": "STRONG_BUY"
+        },
+        {
+          "symbol": "ENA",
+          "smart_money_inflow_usd": 5100000,
+          "price_change_24h": 0.087,
+          "smart_wallets": 192,
+          "signal": "BUY"
+        },
+        {
+          "symbol": "LDO",
+          "smart_money_inflow_usd": 3800000,
+          "price_change_24h": -0.023,
+          "smart_wallets": 147,
+          "signal": "ACCUMULATE"
+        }
+      ]
+    },
+    "base": {
+      "chain": "base",
+      "timeframe": "24h",
+      "tokens": [
+        {
+          "symbol": "AERODROME",
+          "smart_money_inflow_usd": 2100000,
+          "price_change_24h": 0.198,
+          "smart_wallets": 87,
+          "signal": "STRONG_BUY"
+        },
+        {
+          "symbol": "BRETT",
+          "smart_money_inflow_usd": 890000,
+          "price_change_24h": 0.341,
+          "smart_wallets": 43,
+          "signal": "BUY"
+        }
+      ]
+    }
+  },
+  "labels": {
+    "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "labels": [
+      "Smart Trader",
+      "90D Smart Trader",
+      "DeFi Power User"
+    ],
+    "entity": null,
+    "first_seen": "2017-03-12",
+    "tx_count": 2841,
+    "protocols_used": [
+      "Uniswap V3",
+      "Aave V3",
+      "Curve",
+      "Eigenlayer",
+      "Lido"
+    ]
+  },
+  "scoring": {
+    "score": 100,
+    "factors": [
+      "Win rate 73% (+25)",
+      "PnL >$100K (+20)",
+      "Avg hold 18d (skilled) (+10)",
+      "Nansen Smart Trader label (+20)",
+      "90D Smart Trader (+15)",
+      "2841 txns (active) (+5)",
+      "Portfolio $357K (+5)"
+    ],
+    "grade": "S"
+  }
+}
