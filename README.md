@@ -1,11 +1,22 @@
 # OrderFlow Nansen
 
-Lightweight React + Vite dashboard for DeFi orderflow analytics with Nansen wallet profiling.
+Lightweight React + Vite frontend aligned to the documented Nansen `v1 tgm/flow-intelligence` API.
 
-## Scope
-- Orderflow charting and market structure components
-- Funding/OI, liquidity, MEV, and institutional footprint views
-- Nansen wallet profiling script and UI integration
+## Product direction
+
+The active frontend now focuses on one Nansen-native information category:
+
+- segment-level token flow intelligence for a selected token
+- exact `v1 tgm/flow-intelligence` response fields
+- Vercel serverless proxy for `POST /api/v1/tgm/flow-intelligence`
+- schema-compatible mock fallback when live access is unavailable
+
+## Current app shape
+
+- Single-screen flow intelligence surface
+- Exact Nansen-compatible segment flow fields
+- Raw API response inspector
+- Vercel API route at `api/nansen/flow-intelligence.js`
 
 ## Quick start
 
@@ -21,18 +32,26 @@ npm run build
 npm run preview
 ```
 
-## Nansen profiler
+## Nansen setup
 
 ```bash
-npm run nansen:profile
-npm run nansen:demo
+NANSEN_API_KEY=your_key npm run dev
 ```
 
+For Vercel:
+
+- set `NANSEN_API_KEY`
+- optionally set `NANSEN_MOCK_FALLBACK=1` to force schema-compatible mock data
+- optionally set `VITE_NANSEN_DEMO=1` for frontend-only demo mode
+
 ## Stack
+
 - React 18
 - Vite 5
 - Tailwind CSS
-- Recharts + D3 + Lightweight Charts
+- Vercel Functions
+- Native `fetch` for HTTP requests
 
 ## License
+
 MIT

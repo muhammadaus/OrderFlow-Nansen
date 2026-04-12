@@ -1,96 +1,115 @@
 /**
- * Nansen Orderflow Intelligence Service
+ * Nansen Flow Intelligence Service
  *
- * Fetches real Nansen data to display alongside orderflow.
- * No speculation — just numbers: net flows, wallet counts, inflows, outflows.
+ * Frontend contract aligned to the documented v1 tgm/flow-intelligence endpoint:
+ * POST /api/v1/tgm/flow-intelligence
  *
- * Live:  nansen-cli installed + NANSEN_API_KEY
- * Demo:  VITE_NANSEN_DEMO !== '0' (default in dev)
+ * The app calls a local Vercel API route which proxies Nansen using a server-side API key.
+ * If live access fails or no key is configured, the route falls back to mock data using the
+ * documented response fields.
  */
 
-const DEMO = import.meta.env.VITE_NANSEN_DEMO !== '0';
+const DEMO = (import.meta.env?.VITE_NANSEN_DEMO ?? '0') === '1';
 
-// ─── Demo data (mirrors exact Nansen response shapes) ─────────────────────────
+export const DEMO_FLOW_INTELLIGENCE_RESPONSE = {
+  data: [
+    {
+      public_figure_net_flow_usd: 1200000.5,
+      public_figure_avg_flow_usd: 60000.25,
+      public_figure_wallet_count: 11,
+      top_pnl_net_flow_usd: 2100000.75,
+      top_pnl_avg_flow_usd: 105000.5,
+      top_pnl_wallet_count: 14,
+      whale_net_flow_usd: 5400000.25,
+      whale_avg_flow_usd: 270000.75,
+      whale_wallet_count: 22,
+      smart_trader_net_flow_usd: 1800000.5,
+      smart_trader_avg_flow_usd: 90000.25,
+      smart_trader_wallet_count: 19,
+      exchange_net_flow_usd: -3200000.75,
+      exchange_avg_flow_usd: 160000.5,
+      exchange_wallet_count: 6,
+      fresh_wallets_net_flow_usd: 700000.25,
+      fresh_wallets_avg_flow_usd: 35000.75,
+      fresh_wallets_wallet_count: 104
+    }
+  ],
+  warnings: []
+};
 
-export const DEMO_NETFLOWS = [
-  {
-    chain: 'ethereum',
-    net_flow_usd:  284_500_000,
-    inflow_usd:  1_842_000_000,
-    outflow_usd: 1_557_500_000,
-    top_inflows:  [{ token: 'ETH',  amount_usd: 142_000_000, wallets: 1284 }, { token: 'USDC', amount_usd: 89_000_000, wallets: 842 }],
-    top_outflows: [{ token: 'SHIB', amount_usd:  23_000_000, wallets: 2103 }],
-  },
-  {
-    chain: 'base',
-    net_flow_usd:   52_300_000,
-    inflow_usd:    312_000_000,
-    outflow_usd:   259_700_000,
-    top_inflows:  [{ token: 'ETH',  amount_usd: 48_000_000, wallets: 392 }],
-    top_outflows: [],
-  },
-  {
-    chain: 'arbitrum',
-    net_flow_usd:  -18_200_000,
-    inflow_usd:    284_000_000,
-    outflow_usd:   302_200_000,
-    top_inflows:  [{ token: 'ARB', amount_usd: 28_000_000, wallets: 503 }],
-    top_outflows: [],
-  },
-  {
-    chain: 'optimism',
-    net_flow_usd:   12_800_000,
-    inflow_usd:    124_000_000,
-    outflow_usd:   111_200_000,
-    top_inflows:  [{ token: 'OP', amount_usd: 9_100_000, wallets: 187 }],
-    top_outflows: [],
-  },
-];
-
-export const DEMO_SCREENER = [
-  { symbol: 'ETH',    chain: 'ethereum', smart_money_inflow_usd: 142_000_000, smart_wallets: 1284, outflow_wallets: 312,  price_change_24h:  0.043, signal: 'STRONG_BUY'  },
-  { symbol: 'EIGEN',  chain: 'ethereum', smart_money_inflow_usd:   8_200_000, smart_wallets:  284, outflow_wallets:  41,  price_change_24h:  0.142, signal: 'STRONG_BUY'  },
-  { symbol: 'ENA',    chain: 'ethereum', smart_money_inflow_usd:   5_100_000, smart_wallets:  192, outflow_wallets:  58,  price_change_24h:  0.087, signal: 'BUY'          },
-  { symbol: 'LDO',    chain: 'ethereum', smart_money_inflow_usd:   3_800_000, smart_wallets:  147, outflow_wallets:  89,  price_change_24h: -0.023, signal: 'ACCUMULATE'   },
-  { symbol: 'PENDLE', chain: 'ethereum', smart_money_inflow_usd:   2_400_000, smart_wallets:   98, outflow_wallets:  31,  price_change_24h:  0.054, signal: 'BUY'          },
-  { symbol: 'AERO',   chain: 'base',     smart_money_inflow_usd:   2_100_000, smart_wallets:   87, outflow_wallets:  12,  price_change_24h:  0.198, signal: 'STRONG_BUY'  },
-  { symbol: 'BRETT',  chain: 'base',     smart_money_inflow_usd:     890_000, smart_wallets:   43, outflow_wallets:  18,  price_change_24h:  0.341, signal: 'BUY'          },
-  { symbol: 'ARB',    chain: 'arbitrum', smart_money_inflow_usd:  28_000_000, smart_wallets:  503, outflow_wallets: 421,  price_change_24h: -0.018, signal: 'ACCUMULATE'   },
-];
-
-// ─── Data fetching ─────────────────────────────────────────────────────────────
-
-let _cache = { netflows: null, screener: null, ts: 0 };
-const CACHE_TTL = 5 * 60 * 1000;
-
-export async function fetchNansenOrderflowIntel() {
+export async function fetchFlowIntelligence({
+  chain = 'ethereum',
+  tokenAddress = '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  timeframe = '1d'
+} = {}) {
   if (DEMO) {
-    await new Promise(r => setTimeout(r, 280));
-    return { netflows: DEMO_NETFLOWS, screener: DEMO_SCREENER, isDemo: true };
+    await new Promise((resolve) => setTimeout(resolve, 180));
+    return {
+      ...DEMO_FLOW_INTELLIGENCE_RESPONSE,
+      meta: {
+        source: 'mock',
+        is_mock: true,
+        timeframe,
+        chain,
+        token_address: tokenAddress
+      }
+    };
   }
-  if (Date.now() - _cache.ts < CACHE_TTL && _cache.netflows) return _cache;
-  const [nf, sc] = await Promise.all([
-    fetch('/api/nansen/netflows').then(r => r.json()),
-    fetch('/api/nansen/screener').then(r => r.json()),
-  ]);
-  _cache = { netflows: nf, screener: sc.combined ?? sc, ts: Date.now(), isDemo: false };
-  return _cache;
+
+  const response = await fetch('/api/nansen/flow-intelligence', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      chain,
+      token_address: tokenAddress,
+      timeframe,
+    })
+  });
+
+  const rawText = await response.text();
+  let payload = null;
+
+  try {
+    payload = rawText ? JSON.parse(rawText) : null;
+  } catch {
+    payload = null;
+  }
+
+  if (!payload) {
+    return {
+      ...DEMO_FLOW_INTELLIGENCE_RESPONSE,
+      meta: {
+        source: 'mock',
+        is_mock: true,
+        reason: 'invalid_json_response',
+        http_status: response.status,
+        raw_preview: rawText.slice(0, 240),
+        timeframe,
+        chain,
+        token_address: tokenAddress
+      }
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(payload?.error || `Flow intelligence request failed with ${response.status}`);
+  }
+
+  return payload;
 }
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
-
-export const SIGNAL_COLOR = {
-  STRONG_BUY: '#00ff88', BUY: '#4ade80', ACCUMULATE: '#facc15',
-  HOLD: '#94a3b8', SELL: '#f87171', STRONG_SELL: '#ef4444',
+export const fmtCompactUsd = (value) => {
+  if (value == null) return '—';
+  if (Math.abs(value) >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
+  if (Math.abs(value) >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
+  if (Math.abs(value) >= 1e3) return `$${(value / 1e3).toFixed(1)}K`;
+  return `$${Number(value).toFixed(2)}`;
 };
 
-export const CHAIN_COLOR = {
-  ethereum: '#627eea', base: '#0052ff', arbitrum: '#12aaff',
-  polygon: '#8247e5', optimism: '#ff0420',
+export const fmtPercent = (value) => {
+  if (value == null) return '—';
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${(Number(value) * 100).toFixed(2)}%`;
 };
-
-export const fmtM = n =>
-  n == null ? '—' : `${n >= 0 ? '+' : ''}$${(Math.abs(n) / 1e6).toFixed(1)}M`;
-
-export const fmtUSD = n =>
-  n == null ? '—' : `$${(Math.abs(n) / 1e6).toFixed(0)}M`;
