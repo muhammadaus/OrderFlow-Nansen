@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-04-12T00:07:33.361Z",
+  "isDemo": false,
+  "account": {
+    "plan": "free",
+    "credits_remaining": 0
+  },
+  "netflows": [],
+  "screener": [],
+  "crossChainSummary": null,
+  "endpointErrors": [
+    "netflow:ethereum",
+    "netflow:base",
+    "netflow:arbitrum",
+    "netflow:polygon",
+    "netflow:optimism",
+    "screener:ethereum",
+    "screener:base",
+    "screener:arbitrum",
+    "netflow:ethereum:7d"
+  ],
+  "summary": {
+    "totalSmWalletsIn": 0,
+    "totalSmWalletsOut": 0,
+    "totalNetFlow": 0,
+    "totalInflow": 0,
+    "totalOutflow": 0
+  }
+}

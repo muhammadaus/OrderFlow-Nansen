@@ -82,7 +82,7 @@ export const analyzeInstitutionalFootprint = (existingData = null) => {
       activityChange: Math.floor(-10 + Math.random() * 40),
       whaleCount,
       netFlow: netFlow / 50,
-      institutionalScore: Math.floor(65 + Math.random() * 30),
+      flowConfidence: Math.floor(65 + Math.random() * 30),
       tvlGrowth: Math.floor(15 + Math.random() * 20),
       avgWhaleSize: existingData.metrics.avgWhaleSize,
       darkPoolShare: Math.floor(10 + Math.random() * 20),
@@ -283,7 +283,7 @@ export const analyzeInstitutionalFootprint = (existingData = null) => {
     activityChange: Math.floor(-10 + Math.random() * 40), // -10% to +30%
     whaleCount,
     netFlow: netFlow / 50, // Normalize to -1 to 1
-    institutionalScore: Math.floor(65 + Math.random() * 30),
+    flowConfidence: Math.floor(65 + Math.random() * 30),
     tvlGrowth: Math.floor(15 + Math.random() * 20),
     avgWhaleSize: (whaleTransactions.reduce((sum, tx) => sum + tx.value, 0) / whaleTransactions.length / 1000000).toFixed(1),
     darkPoolShare: Math.floor(10 + Math.random() * 20),

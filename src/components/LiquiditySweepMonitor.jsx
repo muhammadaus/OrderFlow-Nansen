@@ -28,6 +28,34 @@ const LiquiditySweepMonitor = () => {
   const currentSweep = analysis?.currentSweep || null;
   const stats = analysis?.stats || {};
   const nearbyLiquidity = analysis?.nearbyLiquidity || {};
+  const confidence = currentSweep ? Math.round(currentSweep.confidence || 0) : null;
+
+  const nextAction = (() => {
+    if (!currentSweep) {
+      return {
+        label: 'WAIT',
+        detail: 'No recent sweep event. Keep monitoring until liquidity is actually taken.',
+        tone: 'text-text-secondary',
+        bg: 'bg-bg-secondary'
+      };
+    }
+
+    if (currentSweep.outcome === 'absorbed') {
+      return {
+        label: 'FADE THE SWEEP',
+        detail: 'Liquidity was taken and rejected. Favor reversal logic after confirmation.',
+        tone: 'text-bull',
+        bg: 'bg-bull/10'
+      };
+    }
+
+    return {
+      label: 'FOLLOW CONTINUATION',
+      detail: 'Liquidity was taken and price kept moving. Favor continuation logic, not mean reversion.',
+      tone: 'text-bear',
+      bg: 'bg-bear/10'
+    };
+  })();
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -69,8 +97,17 @@ const LiquiditySweepMonitor = () => {
           />
         </div>
         <p className="text-gray-400 text-sm mb-4">
-          Tracks stop hunts and whether swept liquidity was absorbed or drove continuation
+          Watches recent liquidity grabs and classifies whether they failed back into range or kept driving.
         </p>
+
+        <div className={`mb-4 rounded-lg border border-border-subtle p-4 ${nextAction.bg}`}>
+          <p className="text-xs uppercase tracking-wide text-text-muted">Current Decision</p>
+          <p className={`mt-2 text-lg font-bold ${nextAction.tone}`}>{nextAction.label}</p>
+          <p className="mt-2 text-sm text-text-secondary">{nextAction.detail}</p>
+          <p className="mt-2 text-xs text-text-muted">
+            Mode: simulation-backed deployment. Confidence: {confidence != null ? `${confidence}%` : 'waiting'}.
+          </p>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-5 gap-3 text-sm">

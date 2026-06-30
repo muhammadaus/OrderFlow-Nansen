@@ -110,9 +110,9 @@ const InstitutionalFootprint = () => {
           </div>
           
           <div className="bg-gray-800 p-3 rounded">
-            <p className="text-gray-400 text-xs">Institutional Score</p>
-            <p className="text-lg font-bold text-purple-400">{institutionalMetrics.institutionalScore || 78}/100</p>
-            <p className="text-xs text-gray-500">Confidence level</p>
+            <p className="text-gray-400 text-xs">Flow Confidence</p>
+            <p className="text-lg font-bold text-purple-400">{institutionalMetrics.flowConfidence || 78}/100</p>
+            <p className="text-xs text-gray-500">Signal confidence</p>
           </div>
         </div>
 
@@ -389,7 +389,7 @@ const InstitutionalFootprint = () => {
           <div>
             <h4 className="font-semibold text-white mb-2">Market Structure Impact</h4>
             <p className="text-gray-300 mb-2">
-              Current institutional activity represents {institutionalMetrics.institutionalScore || 78}% of total market volume. 
+              Current institutional flow confidence is {institutionalMetrics.flowConfidence || 78}%. 
               Smart money flows showing {getFlowDirection(institutionalMetrics.netFlow || 0.3).direction.toLowerCase()} 
               bias with ${Math.abs((institutionalMetrics.netFlow || 0.3) * 100).toFixed(0)}M net positioning.
             </p>

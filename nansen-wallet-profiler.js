@@ -17,7 +17,7 @@
  */
 
 import { execSync } from 'child_process';
-import { writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 
 const DEMO   = process.argv.includes('--demo') || process.env.NANSEN_DEMO === '1';
 const CHAINS = ['ethereum', 'base', 'arbitrum', 'polygon', 'optimism'];
@@ -28,7 +28,15 @@ function nansen(cmd, label) {
   process.stdout.write(`  ⟳  ${label}\n`);
   if (DEMO) return demoData(label);
   try {
-    return JSON.parse(execSync(`nansen ${cmd} 2>/dev/null`, { encoding: 'utf8', timeout: 30000 }));
+    const payload = JSON.parse(execSync(`nansen ${cmd} 2>/dev/null`, { encoding: 'utf8', timeout: 30000 }));
+    if (payload && typeof payload === 'object' && 'success' in payload) {
+      if (payload.success === false) {
+        console.error(`  ✗  ${label}: ${(payload.error || 'Unknown error').slice(0, 100)}`);
+        return null;
+      }
+      return payload.data ?? payload;
+    }
+    return payload;
   } catch (e) {
     console.error(`  ✗  ${label}: ${(e.stderr || e.message || '').slice(0, 100)}`);
     return null;
@@ -85,33 +93,40 @@ async function main() {
 
   // API Call 1 — account
   const account = nansen('account', 'account');
+  const endpointErrors = [];
 
   // API Calls 2–6 — smart money netflow, one per chain
   const netflows = {};
   for (const chain of CHAINS) {
-    netflows[chain] = nansen(
+    const result = nansen(
       `research smart-money netflow --chain ${chain} --days 1`,
       `netflow:${chain}`
     );
+    netflows[chain] = result;
+    if (!result) endpointErrors.push(`netflow:${chain}`);
   }
 
   // API Calls 7–9 — token screener, 3 chains
   const screener = {};
   for (const chain of ['ethereum', 'base', 'arbitrum']) {
-    screener[chain] = nansen(
+    const result = nansen(
       `research token screener --chain ${chain} --timeframe 24h --limit 10`,
       `screener:${chain}`
     );
+    screener[chain] = result;
+    if (!result) endpointErrors.push(`screener:${chain}`);
   }
 
   // API Calls 10–12 — per-chain inflow detail for top tokens
   const topTokenDetail = {};
   const topToken = screener.ethereum?.tokens?.[0];
   if (topToken) {
-    topTokenDetail.ethereum_top = nansen(
+    const result = nansen(
       `research token screener --chain ethereum --timeframe 24h --sort smart_money_inflow_usd:desc --limit 1`,
       `screener:ethereum:top1`
     );
+    topTokenDetail.ethereum_top = result;
+    if (!result) endpointErrors.push('screener:ethereum:top1');
   }
 
   // API Call 13 — cross-chain smart money summary
@@ -119,6 +134,7 @@ async function main() {
     `research smart-money netflow --chain ethereum --days 7`,
     `netflow:ethereum:7d`
   );
+  if (!crossChainSummary) endpointErrors.push('netflow:ethereum:7d');
 
   console.log('\n  All API calls complete.\n');
 
@@ -169,11 +185,16 @@ async function main() {
     account,
     netflows: allNetflows,
     screener: allTokens,
+    crossChainSummary,
+    endpointErrors,
     summary: { totalSmWalletsIn, totalSmWalletsOut, totalNetFlow, totalInflow, totalOutflow },
   };
 
+  mkdirSync('./public', { recursive: true });
   writeFileSync('./nansen-sm-context.json', JSON.stringify(output, null, 2));
-  console.log('\n  Saved → nansen-sm-context.json\n');
+  writeFileSync('./public/nansen-sm-context.json', JSON.stringify(output, null, 2));
+  console.log('\n  Saved → nansen-sm-context.json');
+  console.log('  Saved → public/nansen-sm-context.json\n');
   console.log('  @nansen_ai #NansenCLI\n');
 }
 
